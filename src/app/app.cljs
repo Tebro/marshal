@@ -15,8 +15,8 @@
 (defn add-flight-form [add-flight-fn]
   (let [name (r/atom "")]
     [:div
-     [:input {:type "text" 
-              :placeholder "Name" 
+     [:input {:type "text"
+              :placeholder "Name"
               :on-change #(reset! name (-> % .-target .-value))}]
      [:button {:on-click #(add-flight-fn @name)} "Add"]]))
 
@@ -29,7 +29,7 @@
   (swap! flights (fn [old]
                    (into {}
                          (map (fn [[k v]]
-                                [k (if (number? (last v)) 
+                                [k (if (number? (last v))
                                      (conj v (- (last v) 1000))
                                      v)])
                               (update old name conj :charlie))))))

@@ -26,14 +26,14 @@
       [:h2 "On approach"]
       [:p (str "Total: " (count on-approach))]
       [:table
-       [:thead [:tr 
+       [:thead [:tr
                 [:th "Name"]
                 [:th "Land"]]]
-       [:tbody 
+       [:tbody
         (map (fn [[k _]]
                [:tr {:key k}
                 [:td k]
                 [:td [:button {:on-click #(trigger-landed k)}
-                      "Landed"]]]) 
+                      "Landed"]]])
              on-approach)]]])])
 
