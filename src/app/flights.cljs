@@ -15,12 +15,11 @@
          [:th "Charlie"]]]
        [:tbody
         (map (fn [[k v]]
-               (when (number? (last v))
-                 [:tr {:key k}
-                  [:td k]
-                  [:td (str/join "->" (filter number? (take-last 2 v)))]
-                  [:td [:button {:on-click #(send-charlie k)}
-                        "Sent charlie"]]]))
+               [:tr {:key k}
+                [:td k]
+                [:td (str/join "->" (filter number? (take-last 2 v)))]
+                [:td [:button {:on-click #(send-charlie k)}
+                      "Sent charlie"]]])
              (sort-by (comp last val) in-stack))]]])
    (let [on-approach (filter (comp #(= :charlie %) last val) @flights)]
      [:div.approach
@@ -31,11 +30,10 @@
                 [:th "Name"]
                 [:th "Land"]]]
        [:tbody 
-        (map (fn [[k v]]
-               (when (= (last v) :charlie)
-                 [:tr {:key k}
-                  [:td k]
-                  [:td [:button {:on-click #(trigger-landed k)}
-                        "Landed"]]])) 
+        (map (fn [[k _]]
+               [:tr {:key k}
+                [:td k]
+                [:td [:button {:on-click #(trigger-landed k)}
+                      "Landed"]]]) 
              on-approach)]]])])
 
