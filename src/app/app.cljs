@@ -20,10 +20,7 @@
               :on-change #(reset! name (-> % .-target .-value))}]
      [:button {:on-click #(add-flight-fn @name)} "Add"]]))
 
-
 (def flights (r/atom {}))
-
-()
 
 (defn send-charlie [name]
   (swap! flights (fn [old]
