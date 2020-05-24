@@ -12,13 +12,23 @@
       [altitude])))
 
 
-(defn add-flight-form [add-flight-fn]
+(defn add-flight-form [add-flight-fn flights]
   (let [name (r/atom "")]
-    [:div
-     [:input {:type "text"
-              :placeholder "Name"
-              :on-change #(reset! name (-> % .-target .-value))}]
-     [:button {:on-click #(add-flight-fn @name)} "Add"]]))
+    (fn []
+      [:div
+       [:input {:type "text"
+                :placeholder "Name"
+                :value @name
+                :on-change #(reset! name (.. % -target -value))}]
+       [:button {:on-click #(do (add-flight-fn @name)
+                                (reset! name ""))} "Add"]
+       [:br]
+       [:select {:on-change #(reset! name (.. % -target -value))}
+        [:option {:value ""} "-- select --"]
+        (map
+         (fn [[k _]]
+           [:option {:key k} k])
+         (filter (comp not number? last val) @flights))]])))
 
 (def flights (r/atom {}))
 
@@ -41,5 +51,5 @@
 (defn app []
   [:div
    [:h1 "Marshal"]
-   [add-flight-form add-flight]
+   [add-flight-form add-flight flights]
    [f/flights-ui flights send-charlie set-landed]])
