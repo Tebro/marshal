@@ -11,7 +11,6 @@
       (conj (existing name) altitude)
       [altitude])))
 
-
 (defn add-flight-form [add-flight-fn flights]
   (let [name (r/atom "")]
     (fn []
@@ -38,7 +37,8 @@
                          with-charlie (update old name conj :charlie)]
                      (into {}
                            (map (fn [[k v]]
-                                  [k (if (and (number? (last v)) (> (last v) old-alt))
+                                  [k (if (and (number? (last v))
+                                              (> (last v) old-alt))
                                        (conj v (- (last v) 1000))
                                        v)])
                                 with-charlie))))))
