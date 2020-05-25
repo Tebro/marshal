@@ -19,7 +19,7 @@
         (map (fn [[k v]]
                [:tr {:key k}
                 [:td k]
-                [:td (str/join "->" (filter number? (take-last 2 v)))]
+                [:td (last v)]
                 [:td [:button {:on-click #(move-up k)} "UP"]]
                 [:td [:button {:on-click #(move-down k)} "DOWN"]]
                 [:td [:button {:on-click #(send-charlie k)}
