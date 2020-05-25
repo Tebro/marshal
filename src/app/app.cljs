@@ -1,6 +1,7 @@
 (ns app.app
   (:require [reagent.core :as r]
-            [app.flights :as f]))
+            [app.flights :as f]
+            [app.data :as d]))
 
 (defn stack-flight [existing name]
   (let [last-events (map (comp last val) existing)
@@ -58,4 +59,5 @@
   [:div
    [:h1 "Marshal"]
    [add-flight-form add-flight flights]
-   [f/flights-ui flights send-charlie set-landed]])
+   [f/flights-ui flights send-charlie set-landed]
+   [d/import-export flights]])
