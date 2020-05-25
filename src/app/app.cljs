@@ -34,12 +34,14 @@
 
 (defn send-charlie [name]
   (swap! flights (fn [old]
-                   (into {}
-                         (map (fn [[k v]]
-                                [k (if (number? (last v))
-                                     (conj v (- (last v) 1000))
-                                     v)])
-                              (update old name conj :charlie))))))
+                   (let [old-alt (last (old name))
+                         with-charlie (update old name conj :charlie)]
+                     (into {}
+                           (map (fn [[k v]]
+                                  [k (if (and (number? (last v)) (> (last v) old-alt))
+                                       (conj v (- (last v) 1000))
+                                       v)])
+                                with-charlie))))))
 
 (defn set-landed [name]
   (swap! flights update name conj :landed))
