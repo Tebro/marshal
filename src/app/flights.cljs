@@ -1,7 +1,7 @@
 (ns app.flights
   (:require [clojure.string :as str]))
 
-(defn flights-ui [flights send-charlie trigger-landed]
+(defn flights-ui [flights send-charlie trigger-landed move-up move-down]
   [:div
    (let [in-stack (filter (comp number? last val) @flights)]
      [:div.stack
@@ -12,12 +12,16 @@
         [:tr
          [:th "Name"]
          [:th "Altitude"]
+         [:th "Move up"]
+         [:th "Move down"]
          [:th "Charlie"]]]
        [:tbody
         (map (fn [[k v]]
                [:tr {:key k}
                 [:td k]
                 [:td (str/join "->" (filter number? (take-last 2 v)))]
+                [:td [:button {:on-click #(move-up k)} "UP"]]
+                [:td [:button {:on-click #(move-down k)} "DOWN"]]
                 [:td [:button {:on-click #(send-charlie k)}
                       "Sent charlie"]]])
              (sort-by (comp last val) in-stack))]]])

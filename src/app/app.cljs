@@ -55,9 +55,16 @@
   (let [info (stack-flight @flights name)]
     (swap! flights assoc name info)))
 
+(defn change-altitude [change name]
+  (let [new (+ change (last (@flights name)))]
+    (swap! flights update name conj new)))
+
+(def altitude-up (partial change-altitude 1000))
+(def altitude-down (partial change-altitude -1000))
+
 (defn app []
   [:div
    [:h1 "Marshal"]
    [add-flight-form add-flight flights]
-   [f/flights-ui flights send-charlie set-landed]
+   [f/flights-ui flights send-charlie set-landed altitude-up altitude-down]
    [d/import-export flights]])
