@@ -14,20 +14,24 @@
 (defn add-flight-form [add-flight-fn flights]
   (let [name (r/atom "")]
     (fn []
-      [:div
-       [:input {:type "text"
-                :placeholder "Name"
-                :value @name
-                :on-change #(reset! name (.. % -target -value))}]
-       [:button {:on-click #(do (add-flight-fn @name)
-                                (reset! name ""))} "Add"]
-       [:br]
-       [:select {:on-change #(reset! name (.. % -target -value))}
-        [:option {:value ""} "-- select --"]
-        (map
-         (fn [[k _]]
-           [:option {:key k} k])
-         (filter (comp not number? last val) @flights))]])))
+      (let [submit (fn []
+                     (add-flight-fn @name)
+                     (reset! name ""))]
+        [:div
+         [:input {:type "text"
+                  :placeholder "Name"
+                  :value @name
+                  :on-change #(reset! name (.. % -target -value))
+                  :on-key-down #(when (= 13 (.-keyCode %))
+                                  (submit))}]
+         [:button {:on-click submit} "Add"]
+         [:br]
+         [:select {:on-change #(reset! name (.. % -target -value))}
+          [:option {:value ""} "-- select --"]
+          (map
+           (fn [[k _]]
+             [:option {:key k} k])
+           (filter (comp not number? last val) @flights))]]))))
 
 (def flights (r/atom {}))
 
