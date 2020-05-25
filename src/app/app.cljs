@@ -1,5 +1,6 @@
 (ns app.app
   (:require [reagent.core :as r]
+            [clojure.string :as str]
             [app.flights :as f]
             [app.data :as d]))
 
@@ -20,7 +21,7 @@
                      (reset! name ""))]
         [:div
          [:input {:type "text"
-                  :placeholder "Name"
+                  :placeholder "Name (use , to add many together)"
                   :value @name
                   :on-change #(reset! name (.. % -target -value))
                   :on-key-down #(when (= 13 (.-keyCode %))
@@ -52,9 +53,10 @@
 (defn set-landed [name]
   (swap! flights update name conj :landed))
 
-(defn add-flight [name]
-  (let [info (stack-flight @flights name)]
-    (swap! flights assoc name info)))
+(defn add-flight [name-input]
+  (let [names (str/split name-input #",")
+        infos (into {} (map (fn [n] [n (stack-flight @flights n)]) names))]
+    (swap! flights merge infos)))
 
 (defn change-altitude [change name]
   (let [new (+ change (last (@flights name)))]
