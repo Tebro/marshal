@@ -39,7 +39,8 @@
 (defn send-charlie [name]
   (swap! flights (fn [old]
                    (let [old-alt (last (old name))
-                         with-charlie (update old name conj :charlie)]
+                         same-alt (map key (filter #(= (last (val %)) old-alt) old))
+                         with-charlie (reduce #(update %1 %2 conj :charlie) old same-alt)]
                      (into {}
                            (map (fn [[k v]]
                                   [k (if (and (number? (last v))
